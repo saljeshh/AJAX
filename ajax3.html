@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX External API</title>
+    <style>
+        .user{
+            display: flex;
+            background-color: #f4f4f4;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .user ul{
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+    <button id="button">Load Github Users</button>
+    <br><br>
+
+    <h1>Github Users</h1>
+    <div id="users">
+
+    </div>
+
+    <script>
+        document.querySelector('#button').addEventListener('click',loadGitUsers);
+
+        function loadGitUsers() {
+
+            // create xhr object
+            const xhr =new XMLHttpRequest();
+
+            // open
+            xhr.open('GET','https://api.github.com/users',true);
+
+            //load
+            xhr.onload = function(){
+                if(this.status == 200){
+                    const gitUser = JSON.parse(this.responseText)
+
+                    var output = '';
+
+                    for(var i in gitUser){
+                        output += 
+                        `
+                        <div class = "user">
+                            <img src="${gitUser[i].avatar_url}" width = "70" height="70">
+                            <ul>
+                                <li>ID: ${gitUser[i].id}</li>
+                                <li>Login: ${gitUser[i].login}</li>
+                            </ul>
+                        </div>
+                        `
+
+                        document.getElementById('users').innerHTML = output;
+                    }
+                }
+            }
+
+            // request
+            xhr.send();
+        }
+    </script>
+</body>
+</html>
